@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&family=DotGothic16&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-game: "DotGothic16", sans-serif;
+  
+  --color-neon-cyan: #00f3ff;
+  --color-neon-magenta: #ff00ff;
+  --color-neon-yellow: #fff300;
+  --color-terminal-bg: #050510;
+}
+
+@layer base {
+  body {
+    @apply bg-terminal-bg text-white overflow-hidden font-sans;
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(255, 0, 255, 0.05) 0%, transparent 60%),
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 100%, 100% 4px, 3px 100%;
+  }
+}
+
+@layer utilities {
+  .glitch-text {
+    position: relative;
+    text-shadow: 0.05em 0 0 rgba(255, 0, 255, 0.75),
+                -0.025em -0.05em 0 rgba(0, 255, 255, 0.75),
+                0.025em 0.05em 0 rgba(255, 255, 0, 0.75);
+    animation: glitch 1.5s infinite;
+  }
+
+  .neon-border {
+    box-shadow: 0 0 5px var(--color-neon-cyan),
+                0 0 15px rgba(0, 243, 255, 0.3);
+  }
+
+  .neon-glow-magenta {
+    filter: drop-shadow(0 0 10px var(--color-neon-magenta));
+  }
+
+  .scanline {
+    width: 100%;
+    height: 100px;
+    z-index: 50;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 243, 255, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+    position: absolute;
+    bottom: 100%;
+    animation: scanline 8s linear infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes scanline {
+  0% { bottom: 100%; }
+  100% { bottom: -100px; }
+}
+
+.crt-noise {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 100;
+  background-image: url('https://grain-y.com/assets/images/grain-y.png');
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  grid-template-rows: repeat(20, minmax(0, 1fr));
+  aspect-ratio: 1/1;
+}
+
+.game-cell {
+  @apply border border-white/5;
+}
+
+.game-cell.snake {
+  @apply bg-neon-cyan;
+  box-shadow: 0 0 10px var(--color-neon-cyan);
+}
+
+.game-cell.head {
+  @apply bg-white;
+  box-shadow: 0 0 15px white;
+}
+
+.game-cell.food {
+  @apply bg-neon-magenta rounded-full;
+  box-shadow: 0 0 15px var(--color-neon-magenta);
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(0.8); opacity: 0.8; }
+  to { transform: scale(1.1); opacity: 1; }
+}
